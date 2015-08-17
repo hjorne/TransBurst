@@ -160,10 +160,10 @@ def load_scaler():
 def load_config():
     """ Load and return default configuration (found on config.conf) """
 
-    if not os.path.exists('config.json'):
+    if not os.path.exists('transcode.json'):
         raise IOError('No default configuration found')
 
-    return json.load(open('config.json'))
+    return json.load(open('transcode.json'))
 
 
 def generate_vec(filename, transcode_config):

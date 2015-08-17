@@ -128,7 +128,7 @@ def fill_grabQ(swift_urls):
     num_total = grabQ.qsize()
 
 
-def read_config(config_file='config.json'):
+def read_config(config_file='transcode.json'):
     with open(config_file) as json_config:
         return json.load(json_config)
 
