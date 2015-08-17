@@ -129,16 +129,16 @@ def spawn_thread(nova_client, ImageID, loc, schedule, flavor, num, server_list):
 
 
 # keep spamming servers until we run out of room
-def spawn(nova_client, image_id, loc, schedule, flavor,
+def spawn(nova_client, flavor_id, image_id, location, schedule,
           server_name='TransBurst'):
     server_list = []
     max_num_instances = len(schedule)
     thread_list = []
     for i in range(0, max_num_instances):
-        print "Spawning %s transburst server #%d..." %(loc, i)
+        print "Spawning %s transburst server #%d..." %(location, i)
         server_init_thread = Thread(target=spawn_thread,
-                                    args=(nova_client, image_id, server_name, loc,
-                                          schedule, flavor, i, server_list))
+                                    args=(nova_client, image_id, server_name, location,
+                                          schedule, flavor_id, i, server_list))
         thread_list.append(server_init_thread)
         thread_list[-1].start()
         # check to see if we booted enough vms
@@ -146,7 +146,7 @@ def spawn(nova_client, image_id, loc, schedule, flavor,
     for thread in thread_list:
         thread.join()
 
-    print "%s servers done booting. Listening on port 5000." %loc
+    print "%s servers done booting. Listening on port 5000." %location
     print "Total servers needed:", len(server_list)
     print "Total vCPUs needed:", len(server_list) * 2
     print "Total RAM consumed:", len(server_list) * 4096
