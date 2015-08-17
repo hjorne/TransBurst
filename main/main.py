@@ -34,9 +34,7 @@ else:
 
 # Start up image on our local cloud
 flavor = find_flavor(local_nova, RAM=4096, vCPUS=2)
-local_servers = spawn(local_nova, images[0],
-                           'Local Transburt Server Group', 'local',
-                           schedule, flavor)
+local_servers = spawn(local_nova, images[0], 'local', schedule, flavor)
 
 # Determine if a remote cloud is needed
 remote_workload = []
@@ -82,9 +80,8 @@ if not local_only:
         remote_schedule)
     # Start up the image on our remote cloud
     flavor = find_flavor(remote_nova, RAM=4096, vCPUS=2)
-    remote_servers = spawn(remote_nova, images[1],
-                                'Remote Transburst Server Group', 'remote',
-                                remote_schedule, flavor)
+    remote_servers = spawn(remote_nova, images[1], 'remote', remote_schedule,
+                           flavor, 'Remote Transburst Server Group')
 
     # Wait for a signal from the workers saying that they are done
     print 'Waiting for completion signal...'

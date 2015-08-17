@@ -129,14 +129,15 @@ def spawn_thread(nova_client, ImageID, loc, schedule, flavor, num, server_list):
 
 
 # keep spamming servers until we run out of room
-def spawn(nova_client, ImageID, ServerName, loc, schedule, flavor):
+def spawn(nova_client, image_id, loc, schedule, flavor,
+          server_name='TransBurst'):
     server_list = []
     max_num_instances = len(schedule)
     thread_list = []
     for i in range(0, max_num_instances):
         print "Spawning %s transburst server #%d..." %(loc, i)
         server_init_thread = Thread(target=spawn_thread,
-                                    args=(nova_client, ImageID, ServerName, loc,
+                                    args=(nova_client, image_id, server_name, loc,
                                           schedule, flavor, i, server_list))
         thread_list.append(server_init_thread)
         thread_list[-1].start()
