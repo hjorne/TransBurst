@@ -1,7 +1,4 @@
-from subprocess import check_output
-
 from threading import Thread
-import time
 
 
 # Move_data_to_local_cloud is used for testing, putting data on our cloud.

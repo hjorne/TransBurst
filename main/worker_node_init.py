@@ -193,22 +193,3 @@ def find_local_max_number_of_vms(nova_client, tenant_name, flavor):
 
     num_vms = min(max_ram / ram_per_vm, max_cores / cores_per_vm, max_servers)
     return num_vms
-
-
-# main is used for testing
-#
-if __name__ == "__main__":
-    auth = v2.Password(auth_url="http://10.0.2.15:35357/v2.0", username="admin",
-                       password="light", tenant_name="admin")
-
-    sess = session.Session(auth=auth)
-
-    nova_client = client.Client("2.26.0", session=sess)
-
-    # NOTE: try the swift auth token
-    # can be found via command "swift stat -v"
-    glance_client = Client('1', endpoint="http://10.131.69.112:9292",
-                           token="8520212cd1a34b39b0e9d8d475144abb")
-
-    image = upload_new_image(glance_client, "gather.raw", True)
-    activate_image(nova_client, image.id, "test server", 2)
