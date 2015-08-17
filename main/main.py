@@ -18,7 +18,7 @@ deadline = local_credentials['DEADLINE']
 
 # Determine what can be done in the allotted time
 time_remaining = time_until_deadline(deadline)
-schedule = partition(time_remaining, local_swift, 'videos')
+schedule = partition(time_remaining, local_swift)
 num_instances = len(schedule)
 print 'Predicted number of instances needed: ', num_instances
 
@@ -29,16 +29,14 @@ local_servers = spawn(local_nova, find_flavor(local_nova),
 # Determine if a remote cloud is needed
 remote_workload = []
 if len(local_servers) < num_instances:
-    # if we can't fit all the workload on the local cloud, send the remaining
-    # workload to the remote cloud
+    # If workload cannot fit on local cloud, send the remaining workload to the
+    # remote cloud
     local_only = False
     remote_workload = schedule
 
-print 'Predicted number of instances needed on local cloud:', len(local_servers)
-print 'Predicted number of instances needed on remote cloud:', \
-    len(remote_workload)
+print 'Number of instances required on local cloud:', len(local_servers)
+print 'Number of instances required on remote cloud:', len(remote_workload)
 
-remote_servers = []
 if not local_only:
     remote_credentials = load_credentials('remote.json')
 
@@ -57,11 +55,10 @@ if not local_only:
     remote_list = [video for sub_list in remote_workload for video in
                    sub_list]
     time_remaining = time_until_deadline(deadline)
-    remote_schedule = partition(time_remaining, remote_swift, 'videos',
+    remote_schedule = partition(time_remaining, remote_swift,
                                 file_list=remote_list)
 
-    print 'Number of remote instances needed (course corrected): ', \
-        len(remote_schedule)
+    print 'Corrected number of remote instances required:', len(remote_schedule)
 
     # Start up the image on our remote cloud
     remote_servers = spawn(remote_nova, find_flavor(remote_nova),
