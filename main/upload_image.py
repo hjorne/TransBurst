@@ -3,7 +3,7 @@ import glanceclient.v2.client as glclient
 
 
 # Note: be sure an accessuble glance public endpoint is available or this would time out
-def upload(glance_client, keystone_client, images):
+def upload(glance_client, images):
     image = glance_client.images.create(name="worker", disk_format='raw',
                                         container_format='bare')
 

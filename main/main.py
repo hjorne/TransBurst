@@ -49,7 +49,7 @@ if __name__ == "__main__":
     """Check if our image is already on the cloud, if it isn't, upload it"""
     image = upload_image.find_image(glclient)
     if image is None:
-        upload_image.upload(glclient, ksclient, images)
+        upload_image.upload(glclient, images)
     else:
         images.append(image)
 
@@ -90,7 +90,7 @@ if __name__ == "__main__":
         """Check if our image exists on the remote cloud, if not, upload it"""
         image = upload_image.find_image(remote_glclient)
         if image is None:
-            upload_image.upload(remote_glclient, remote_ksclient, images)
+            upload_image.upload(remote_glclient, images)
         else:
             print "Image found on remote cloud!"
             images.append(image)

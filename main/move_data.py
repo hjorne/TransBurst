@@ -18,7 +18,6 @@ def Move_data_to_local_cloud(swift_client, ListOfFiles, container="videos"):
     swift_client.put_container(container)
     print "\"Videos\" container created"
     threads = []
-    begin = time.time()
     for clip in ListOfFiles:
         threads.append(
             Thread(target=MDTLC_helper, args=(swift_client, clip, container)))
@@ -42,8 +41,7 @@ def retrieve_data_from_local_cloud(swift_client):
 # to move data from our cisco cloud to some remote cloud running openstack
 # Note, we must be supplied with the appropriate authentication of the cloud to work
 #
-def Move_data_to_remote_cloud_OPENSTACK(ListOfFiles, swift_client,
-                                        remote_swift_client):
+def Move_data_to_remote_cloud_OPENSTACK(ListOfFiles, remote_swift_client):
     remote_swift_client.put_container("videos")
     print "\"videos\" container created on remote cloud"
     for schedule in ListOfFiles:
