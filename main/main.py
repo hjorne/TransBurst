@@ -3,11 +3,11 @@
 from time import sleep
 import json
 
-import worker_node_init
+import init
 import client_create
-import upload_image
+import upload
 import scheduling
-import move_data
+import move
 
 test_deadline = "08/12/2015 20:00:00"
 
@@ -47,15 +47,15 @@ if __name__ == "__main__":
     images = []
 
     """Check if our image is already on the cloud, if it isn't, upload it"""
-    image = upload_image.find_image(glclient)
+    image = upload.find_image(glclient)
     if image is None:
-        upload_image.upload(glclient, images)
+        upload.upload(glclient, images)
     else:
         images.append(image)
 
     """Start up image on our local cloud"""
-    flavor = worker_node_init.find_flavor(nvclient, RAM=4096, vCPUS=2)
-    local_servers = worker_node_init.spawn(nvclient, images[0], "Local Transburt Server Group", "local", schedule, flavor)
+    flavor = init.find_flavor(nvclient, RAM=4096, vCPUS=2)
+    local_servers = init.spawn(nvclient, images[0], "Local Transburt Server Group", "local", schedule, flavor)
     
     """Determine if a remote cloud is needed"""
     remote_workload = []
@@ -88,9 +88,9 @@ if __name__ == "__main__":
 
 
         """Check if our image exists on the remote cloud, if not, upload it"""
-        image = upload_image.find_image(remote_glclient)
+        image = upload.find_image(remote_glclient)
         if image is None:
-            upload_image.upload(remote_glclient, images)
+            upload.upload(remote_glclient, images)
         else:
             print "Image found on remote cloud!"
             images.append(image)
@@ -102,8 +102,8 @@ if __name__ == "__main__":
 
         print "Number of remote instances needed (course corrected): ",len(remote_schedule)
         """Start up the image on our remote cloud"""
-        flavor = worker_node_init.find_flavor(remote_nvclient, RAM=4096, vCPUS=2)
-        remote_servers = worker_node_init.spawn(remote_nvclient, images[1], "Remote Transburst Server Group", 'remote', remote_schedule, flavor)
+        flavor = init.find_flavor(remote_nvclient, RAM=4096, vCPUS=2)
+        remote_servers = init.spawn(remote_nvclient, images[1], "Remote Transburst Server Group", 'remote', remote_schedule, flavor)
 
         """Wait for a signal from the workers saying that they are done"""
         print "Waiting for completion signal..."
@@ -112,7 +112,7 @@ if __name__ == "__main__":
             sleep(5)
 
         """Once the job is complete, kill the servers"""
-        worker_node_init.kill_servers(remote_servers)
+        init.kill_servers(remote_servers)
 
     print "Waiting for completion signal from local nodes..."
     while not scheduling.transcode_job_complete(nvclient, local_servers,
@@ -120,6 +120,6 @@ if __name__ == "__main__":
         sleep(5)
 
     print "JOB COMPLETE!"
-    move_data.retrieve_data_from_local_cloud(swclient)
-    worker_node_init.kill_servers(local_servers)
+    move.retrieve_data_from_local_cloud(swclient)
+    init.kill_servers(local_servers)
 
