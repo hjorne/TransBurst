@@ -82,7 +82,7 @@ def write_index(filename, index, index_filename='index.json'):
 
 
 if __name__ == '__main__':
-    with open('transburst.json', 'r') as cred_file:
+    with open('local.json', 'r') as cred_file:
         credentials = json.load(cred_file)
     if len(sys.argv) > 1:
         directory = sys.argv[1]

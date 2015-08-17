@@ -69,7 +69,7 @@ def grab_thread():
     global grabQ, convertQ
 
     print 'GRAB THREAD: Loading credentials'
-    credentials = json.load(open('transburst.json'))
+    credentials = json.load(open('local.json'))
 
     print 'GRAB THREAD: Spawning swift client'
     sw_client = create_swift_client(credentials)
@@ -103,7 +103,7 @@ def place_thread():
     global placeQ, num_processed, num_total
 
     print 'PLACE THREAD: Loading credentials'
-    credentials = json.load(open('transburst.json'))
+    credentials = json.load(open('local.json'))
 
     print 'PLACE THREAD: Spawning swift client'
     sw_client = create_swift_client(credentials)
