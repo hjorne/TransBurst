@@ -5,7 +5,7 @@ import predictor
 from hackurl import hackurl
 
 
-def find_epoch_time_until_deadline(deadline):
+def time_until_deadline(deadline):
     # WARNING:  Time must be formatted the same as pattern
     #
     try:
@@ -21,7 +21,7 @@ def find_epoch_time_until_deadline(deadline):
         return 1
 
 
-def partition_workload(time_until_deadline, swiftclient, container_name, file_list = None):
+def partition(time_until_deadline, swiftclient, container_name, file_list = None):
     if not file_list: 
         container_data = []
         for data in swiftclient.get_container(container_name)[1]:
@@ -68,7 +68,7 @@ def partition_workload(time_until_deadline, swiftclient, container_name, file_li
     return partitioned_video_list
 
 
-def transcode_job_complete(nova_client, server_list, loc):
+def transcode_complete(nova_client, server_list, loc):
     for index, server in enumerate(server_list):
         addr_keys = nova_client.servers.ips(server).keys()[0]
         ip_address = nova_client.servers.ips(server)[addr_keys][0][

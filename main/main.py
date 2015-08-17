@@ -1,5 +1,3 @@
-# main.py
-
 from time import sleep
 import json
 
@@ -11,17 +9,17 @@ import move
 
 test_deadline = "08/12/2015 20:00:00"
 
-remote_credentials = {"OS_AUTH_URL": "https://us-internal-1.cloud.cisco.com:5000/v2.0",
-                       "OS_USERNAME": 'rumadera',
-                       "OS_PASSWORD": '1ightriseR!',
-                       "OS_TENANT_NAME": 'BXBInternBox' ,
-                       "OS_REGION_NAME": 'us-internal-1'}
+remote_credentials = {
+    "OS_AUTH_URL": "https://us-internal-1.cloud.cisco.com:5000/v2.0",
+    "OS_USERNAME": 'rumadera',
+    "OS_PASSWORD": '1ightriseR!',
+    "OS_TENANT_NAME": 'BXBInternBox',
+    "OS_REGION_NAME": 'us-internal-1'}
 
 if __name__ == "__main__":
     credentials = json.load(open('transburst.json'))
-    print "Logging in to "+credentials["OS_AUTH_URL"]+" as "+credentials["OS_USERNAME"]+"..."
-
-    # ingest(credentials)
+    print "Logging in to " + credentials["OS_AUTH_URL"] + " as " + credentials[
+        "OS_USERNAME"] + "..."
 
     ksclient = clients.create_keystone_client(credentials)
     glclient = clients.create_glance_client(ksclient)
@@ -39,10 +37,10 @@ if __name__ == "__main__":
     #####################################################
 
     """Determine what can be done in the alloted time"""
-    time_remaining = scheduling.find_epoch_time_until_deadline(test_deadline)
-    schedule = scheduling.partition_workload(time_remaining, swclient, "videos")
+    time_remaining = scheduling.time_until_deadline(test_deadline)
+    schedule = scheduling.partition(time_remaining, swclient, "videos")
     num_instances = len(schedule)
-    print "Predicted number of instances needed: ",num_instances
+    print "Predicted number of instances needed: ", num_instances
 
     images = []
 
@@ -55,24 +53,29 @@ if __name__ == "__main__":
 
     """Start up image on our local cloud"""
     flavor = init.find_flavor(nvclient, RAM=4096, vCPUS=2)
-    local_servers = init.spawn(nvclient, images[0], "Local Transburt Server Group", "local", schedule, flavor)
-    
+    local_servers = init.spawn(nvclient, images[0],
+                               "Local Transburt Server Group", "local",
+                               schedule, flavor)
+
     """Determine if a remote cloud is needed"""
     remote_workload = []
     if len(local_servers) < num_instances:
-    # if we can't fit all the workload on the local cloud, send the remaining workload to the remote cloud 
+        # if we can't fit all the workload on the local cloud, send the remaining workload to the remote cloud
         local_only = False
         remote_workload = schedule
 
-    print "Predicted number of instances needed on local cloud: ", len(local_servers)
-    print "Predicted number of instances needed on remote cloud: ", len(remote_workload)
+    print "Predicted number of instances needed on local cloud: ", len(
+        local_servers)
+    print "Predicted number of instances needed on remote cloud: ", len(
+        remote_workload)
     remote_servers = []
     if not local_only:
         """Given a deadline, workload, and a collection of data, determine
          which cloud to outsource to"""
         # remote_credentials = find_optimal_cloud(deadline, work_load_outsourced)        
 
-        print "Logging in to "+remote_credentials["OS_AUTH_URL"]+" as "+remote_credentials["OS_USERNAME"]+"..."
+        print "Logging in to " + remote_credentials["OS_AUTH_URL"] + " as " + \
+              remote_credentials["OS_USERNAME"] + "..."
 
         """(ASSUMING THE OPTIMAL CLOUD RUNS OPENSTACK) Given credentials, 
         spawn a new client keystone client so that we may have permission to move files around"""
@@ -84,7 +87,7 @@ if __name__ == "__main__":
 
         print "Moving data to remote cloud..."
         """Using that cloud's api, move the video files to that cloud"""
-        #move_data.Move_data_to_remote_cloud_OPENSTACK(remote_workload, swclient, remote_swclient)
+        # move_data.Move_data_to_remote_cloud_OPENSTACK(remote_workload, swclient, remote_swclient)
 
 
         """Check if our image exists on the remote cloud, if not, upload it"""
@@ -96,30 +99,34 @@ if __name__ == "__main__":
             images.append(image)
 
         """Find remote schedule"""
-        remote_list = [video for sublist in remote_workload for video in sublist]
-        time_remaining = scheduling.find_epoch_time_until_deadline(test_deadline)
-        remote_schedule = scheduling.partition_workload(time_remaining, remote_swclient, "videos", file_list=remote_list)
+        remote_list = [video for sublist in remote_workload for video in
+                       sublist]
+        time_remaining = scheduling.time_until_deadline(test_deadline)
+        remote_schedule = scheduling.partition(time_remaining, remote_swclient,
+                                               "videos", file_list=remote_list)
 
-        print "Number of remote instances needed (course corrected): ",len(remote_schedule)
+        print "Number of remote instances needed (course corrected): ", len(
+            remote_schedule)
         """Start up the image on our remote cloud"""
         flavor = init.find_flavor(remote_nvclient, RAM=4096, vCPUS=2)
-        remote_servers = init.spawn(remote_nvclient, images[1], "Remote Transburst Server Group", 'remote', remote_schedule, flavor)
+        remote_servers = init.spawn(remote_nvclient, images[1],
+                                    "Remote Transburst Server Group", 'remote',
+                                    remote_schedule, flavor)
 
         """Wait for a signal from the workers saying that they are done"""
         print "Waiting for completion signal..."
-        while not scheduling.transcode_job_complete(remote_nvclient, remote_servers,
-                                                    'remote'):
+        while not scheduling.transcode_complete(remote_nvclient, remote_servers,
+                                                'remote'):
             sleep(5)
 
         """Once the job is complete, kill the servers"""
         init.kill_servers(remote_servers)
 
     print "Waiting for completion signal from local nodes..."
-    while not scheduling.transcode_job_complete(nvclient, local_servers,
-                                                'local'):
+    while not scheduling.transcode_complete(nvclient, local_servers,
+                                            'local'):
         sleep(5)
 
     print "JOB COMPLETE!"
     move.retrieve_data_from_local_cloud(swclient)
     init.kill_servers(local_servers)
-
