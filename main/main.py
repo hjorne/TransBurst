@@ -4,7 +4,6 @@ from init import *
 from upload import *
 from move import *
 
-
 local_credentials = load_credentials('local.json')
 remote_credentials = load_credentials('remote.json')
 
@@ -23,18 +22,10 @@ schedule = partition(time_remaining, local_swift, 'videos')
 num_instances = len(schedule)
 print 'Predicted number of instances needed: ', num_instances
 
-images = []
-
-# Check if our image is already on the cloud, if it isn't, upload it
-image = find_image(local_glance)
-if image is None:
-    upload(local_glance, images)
-else:
-    images.append(image)
 
 # Start up image on our local cloud
-flavor = find_flavor(local_nova, RAM=4096, vCPUS=2)
-local_servers = spawn(local_nova, images[0], 'local', schedule, flavor)
+local_servers = spawn(local_nova, find_image(local_glance), 'local', schedule,
+                      find_flavor(local_nova))
 
 # Determine if a remote cloud is needed
 remote_workload = []
@@ -44,10 +35,10 @@ if len(local_servers) < num_instances:
     local_only = False
     remote_workload = schedule
 
-print 'Predicted number of instances needed on local cloud: ', len(
-    local_servers)
-print 'Predicted number of instances needed on remote cloud: ', len(
-    remote_workload)
+print 'Predicted number of instances needed on local cloud:', len(local_servers)
+print 'Predicted number of instances needed on remote cloud:', \
+    len(remote_workload)
+
 remote_servers = []
 if not local_only:
     # Given a deadline, workload, and a collection of data, determine
@@ -61,32 +52,24 @@ if not local_only:
     print 'Moving data to remote cloud...'
     # Using that cloud's api, move the video files to that cloud
 
-    # Check if our image exists on the remote cloud, if not, upload it
-    image = find_image(remote_glance)
-    if image is None:
-        upload(remote_glance, images)
-    else:
-        print 'Image found on remote cloud!'
-        images.append(image)
-
     # Find remote schedule
     remote_list = [video for sublist in remote_workload for video in
                    sublist]
     time_remaining = time_until_deadline(deadline)
     remote_schedule = partition(time_remaining, remote_swift,
-                                           'videos', file_list=remote_list)
+                                'videos', file_list=remote_list)
 
-    print 'Number of remote instances needed (course corrected): ', len(
-        remote_schedule)
+    print 'Number of remote instances needed (course corrected): ', \
+        len(remote_schedule)
+
     # Start up the image on our remote cloud
-    flavor = find_flavor(remote_nova, RAM=4096, vCPUS=2)
-    remote_servers = spawn(remote_nova, images[1], 'remote', remote_schedule,
-                           flavor, 'Remote Transburst Server Group')
+    remote_servers = spawn(remote_nova, find_image(remote_glance), 'remote',
+                           remote_schedule, find_flavor(remote_nova))
 
     # Wait for a signal from the workers saying that they are done
     print 'Waiting for completion signal...'
     while not transcode_complete(remote_nova, remote_servers,
-                                            'remote'):
+                                 'remote'):
         sleep(5)
 
     # Once the job is complete, kill the servers
@@ -94,7 +77,7 @@ if not local_only:
 
 print 'Waiting for completion signal from local nodes...'
 while not transcode_complete(local_nova, local_servers,
-                                        'local'):
+                             'local'):
     sleep(5)
 
 print 'JOB COMPLETE!'
