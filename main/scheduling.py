@@ -11,10 +11,10 @@ def find_epoch_time_until_deadline(deadline):
     try:
         pattern = "%m/%d/%Y %H:%M:%S"
         epoch = int(time.mktime(time.strptime(deadline, pattern)))
-        if (epoch < time.time()):
+        if epoch < time.time():
             raise Exception("Negative deadline")
         return epoch - time.time()
-    except (ValueError):
+    except ValueError:
         print "Deadline required to be of form: MM/DD/YYYY HH:MM:SS"
     except Exception as e:
         print e
@@ -48,16 +48,16 @@ def partition_workload(time_until_deadline, swiftclient, container_name, file_li
     for video in file_list:
         single_vm_capacity.append(video)
         prediction_time = predictor.predict(video)
-        if (prediction_time > time_until_deadline):
+        if prediction_time > time_until_deadline:
             print "WARNING:  File is too big to be transcoded by VM in time."
             partitioned_video_list.append(single_vm_capacity)
             single_vm_capacity = []
             tmp_t_u_d -= prediction_time
             continue
 
-        if (tmp_t_u_d - prediction_time > 0):
+        if tmp_t_u_d - prediction_time > 0:
             tmp_t_u_d -= prediction_time
-            if (video == file_list[-1]):
+            if video == file_list[-1]:
                 partitioned_video_list.append(single_vm_capacity)
 
         else:

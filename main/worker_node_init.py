@@ -81,7 +81,7 @@ def spawn_helper(nova_client, ImageID, ServerName, loc, schedule, flavor, num,
         # if an error state is reached, fall back.
         while not is_done_booting(nova_client, server, loc):
             server = update_status(nova_client, server)
-            if (server.status == "ERROR"):
+            if server.status == "ERROR":
                 server.delete()
                 return server_list
             sleep(2)

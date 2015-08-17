@@ -48,7 +48,7 @@ if __name__ == "__main__":
 
     """Check if our image is already on the cloud, if it isn't, upload it"""
     image = upload_image.find_image(glclient)
-    if image == None:
+    if image is None:
         upload_image.upload(glclient, ksclient, images)
     else:
         images.append(image)
@@ -59,7 +59,7 @@ if __name__ == "__main__":
     
     """Determine if a remote cloud is needed"""
     remote_workload = []
-    if (len(local_servers) < num_instances):
+    if len(local_servers) < num_instances:
     # if we can't fit all the workload on the local cloud, send the remaining workload to the remote cloud 
         local_only = False
         remote_workload = schedule
@@ -67,7 +67,7 @@ if __name__ == "__main__":
     print "Predicted number of instances needed on local cloud: ", len(local_servers)
     print "Predicted number of instances needed on remote cloud: ", len(remote_workload)
     remote_servers = []
-    if (not local_only):
+    if not local_only:
         """Given a deadline, workload, and a collection of data, determine
          which cloud to outsource to"""
         # remote_credentials = find_optimal_cloud(deadline, work_load_outsourced)        
@@ -89,7 +89,7 @@ if __name__ == "__main__":
 
         """Check if our image exists on the remote cloud, if not, upload it"""
         image = upload_image.find_image(remote_glclient)
-        if image == None:
+        if image is None:
             upload_image.upload(remote_glclient, remote_ksclient, images)
         else:
             print "Image found on remote cloud!"

@@ -62,9 +62,3 @@ def Retrieve_data_from_remote_cloud_OPENSTACK(swift_client,
     for f in container_data:
         with open(f, "rb") as xcode_bytes:
             swift_client.put_object("completed", f, contents=xcode_bytes)
-
-
-if __name__ == "__main__":
-    ListOfFiles = check_output(["ls"]).split('\n')
-    del ListOfFiles[-1]
-    Move_data_to_local_cloud(ListOfFiles)
