@@ -2,16 +2,18 @@
 # in glance.  Dependencies include python glance-client, our proprietary state of the art virtual machine image 
 # (courtesy of joe), and python nova.  
 
-from novaclient import client
 from novaclient import exceptions
-from keystoneclient import session
-from keystoneclient.auth.identity import v2
-from glanceclient import Client
 from time import sleep
 from threading import Thread
 from requests import post, get, ConnectionError
 
 from hackurl import hackurl
+import json
+
+
+def load_credentials(filename):
+    with open(filename) as credentials:
+        return json.load(credentials)
 
 
 # after the image is uploaded, you will need to boot it with nova
