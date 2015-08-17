@@ -68,7 +68,7 @@ def find_flavor(nova_client, RAM=4096, vCPUS=2):
                                                                    vCPUS * 2)
 
 
-def spawn_helper(nova_client, ImageID, loc, schedule, flavor, num, server_list):
+def spawn_thread(nova_client, ImageID, loc, schedule, flavor, num, server_list):
     # print "Spawning transburst server with flavor id", flavor, "..."
     try:
         # and put that vm's workload in that file.
@@ -78,7 +78,7 @@ def spawn_helper(nova_client, ImageID, loc, schedule, flavor, num, server_list):
 
         # keep checking to make sure the server has been booted.
         # if an error state is reached, fall back.
-        while not is_done_booting(nova_client, server, loc):
+        while not done_booting(nova_client, server, loc):
             server = update_status(nova_client, server)
             if server.status == "ERROR":
                 server.delete()
@@ -133,7 +133,7 @@ def spawn(nova_client, ImageID, ServerName, loc, schedule, flavor):
     thread_list = []
     for i in range(0, max_num_instances):
         print "Spawning %s transburst server #%d..." %(loc, i)
-        server_init_thread = Thread(target=spawn_helper,
+        server_init_thread = Thread(target=spawn_thread,
                                     args=(nova_client, ImageID, ServerName, loc,
                                           schedule, flavor, i, server_list))
         thread_list.append(server_init_thread)
@@ -153,7 +153,7 @@ def spawn(nova_client, ImageID, ServerName, loc, schedule, flavor):
 # checks the server status to see if it's still building
 
 
-def is_done_booting(nova_client, server, loc):
+def done_booting(nova_client, server, loc):
     if server.status == 'ACTIVE':
         addr_keys = nova_client.servers.ips(server).keys()[0]
         ip_address = nova_client.servers.ips(server)[addr_keys][0][
@@ -181,7 +181,7 @@ def kill_servers(server_list):
 # given the resources you have available and the resources a single vm consumes,
 # calculate how many vms you can fit on your cloud.
 #
-def find_local_max_number_of_vms(nova_client, tenant_name, flavor):
+def find_local_max(nova_client, tenant_name, flavor):
     flavor = nova_client.flavors.get(flavor)
     ram_per_vm = flavor.ram
     cores_per_vm = flavor.vpus
