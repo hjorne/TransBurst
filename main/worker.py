@@ -6,7 +6,7 @@ import time
 import os
 from flask import *
 from converter import ffmpeg
-from client_create import create_swift_client
+from clients import create_swift_client
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = '/home/interns/eas/main'
@@ -139,7 +139,7 @@ def grab(sw_client, filename):
     # and we need to create an actual client with the swiftclient API
     # this assumes several things:
     # 1) the remote credentials have been posted to the worker VM
-    # 2) client_create.py and transburst_utils.py are in the current directory
+    # 2) clients.py and transburst_utils.py are in the current directory
     """
 
     # reminder: sw_client.get_object returns a tuple in the form of:

@@ -4,7 +4,7 @@ from time import sleep
 import json
 
 import init
-import client_create
+import clients
 import upload
 import scheduling
 import move
@@ -23,10 +23,10 @@ if __name__ == "__main__":
 
     # ingest(credentials)
 
-    ksclient = client_create.create_keystone_client(credentials)
-    glclient = client_create.create_glance_client(ksclient)
-    swclient = client_create.create_swift_client(credentials)
-    nvclient = client_create.create_nova_client(credentials)
+    ksclient = clients.create_keystone_client(credentials)
+    glclient = clients.create_glance_client(ksclient)
+    swclient = clients.create_swift_client(credentials)
+    nvclient = clients.create_nova_client(credentials)
     remote_ksclient, remote_glclient, remote_nvclient, remote_swclient = None, None, None, None
 
     local_only = True
@@ -77,10 +77,10 @@ if __name__ == "__main__":
         """(ASSUMING THE OPTIMAL CLOUD RUNS OPENSTACK) Given credentials, 
         spawn a new client keystone client so that we may have permission to move files around"""
 
-        remote_ksclient = client_create.create_keystone_client(remote_credentials)
-        remote_glclient = client_create.create_glance_client(remote_ksclient)
-        remote_nvclient = client_create.create_nova_client(remote_credentials)
-        remote_swclient = client_create.create_swift_client(remote_credentials)
+        remote_ksclient = clients.create_keystone_client(remote_credentials)
+        remote_glclient = clients.create_glance_client(remote_ksclient)
+        remote_nvclient = clients.create_nova_client(remote_credentials)
+        remote_swclient = clients.create_swift_client(remote_credentials)
 
         print "Moving data to remote cloud..."
         """Using that cloud's api, move the video files to that cloud"""
