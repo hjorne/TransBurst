@@ -38,11 +38,10 @@ print 'Number of instances required on local cloud:', len(local_servers)
 print 'Number of instances required on remote cloud:', len(remote_workload)
 
 if not local_only:
-    remote_credentials = load_credentials('remote.json')
-
     # Given a deadline, workload, and a collection of data, determine
     # which cloud to outsource to
 
+    remote_credentials = load_credentials('remote.json')
     remote_keystone = create_keystone_client(remote_credentials)
     remote_glance = create_glance_client(remote_keystone)
     remote_nova = create_nova_client(remote_credentials)
@@ -64,7 +63,6 @@ if not local_only:
     remote_servers = spawn(remote_nova, find_flavor(remote_nova),
                            find_image(remote_glance), 'remote', remote_schedule)
 
-    # Wait for a signal from the workers saying that they are done
     print 'Waiting for completion signal from remote nodes...'
     while not transcode_complete(remote_nova, remote_servers, 'remote'):
         sleep(5)
