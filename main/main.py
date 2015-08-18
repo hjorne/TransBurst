@@ -1,6 +1,6 @@
 from scheduling import *
 from clients import *
-from init import *
+from manager import *
 from move import *
 
 # The default state is to run only in the local cloud, using the remote on an
