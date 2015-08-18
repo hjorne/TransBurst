@@ -1,8 +1,6 @@
 from threading import Thread
 
 
-# move is used for testing, putting data on our cloud.
-#
 def move_thread(swift_client, clip, container):
     print clip
     with open(clip, 'rb') as f:

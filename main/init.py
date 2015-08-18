@@ -181,6 +181,14 @@ def kill_servers(server_list):
         server.delete()
 
 
+def find_image(glance_client):
+    image_list = list(glance_client.images.list())
+    for image in image_list:
+        if image.name == "worker":
+            return image.id
+    return None
+
+
 # given the resources you have available and the resources a single vm consumes,
 # calculate how many vms you can fit on your cloud.
 #
