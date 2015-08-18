@@ -77,6 +77,6 @@ while not transcode_complete(local_nova, local_servers, 'local'):
 print 'Received completion signal from local nodes'
 
 print 'Retrieving data...'
-retrieve_data_from_local_cloud(local_swift)
+retrieve(local_swift)
 kill_servers(local_servers)
 print 'JOB COMPLETE!'
