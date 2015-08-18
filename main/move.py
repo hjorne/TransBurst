@@ -33,13 +33,3 @@ def retrieve_data_from_local_cloud(swift_client):
         obj_tuple = swift_client.get_object('completed', f)
         with open(f, 'wb') as xcode_bytes:
             xcode_bytes.write(obj_tuple[1])
-
-
-def Retrieve_data_from_remote_cloud_OPENSTACK(swift_client,
-                                              remote_swift_client):
-    container_data = []
-    for data in remote_swift_client.get_container("completed")[1]:
-        container_data.append('{0}'.format(data['name']))
-    for f in container_data:
-        with open(f, "rb") as xcode_bytes:
-            swift_client.put_object("completed", f, contents=xcode_bytes)
