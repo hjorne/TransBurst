@@ -2,7 +2,7 @@ import time
 import urllib2
 
 import predictor
-from hackurl import hackurl
+from manager import hack_url
 
 
 def time_until_deadline(deadline):
@@ -75,7 +75,7 @@ def transcode_complete(nova_client, server_list, loc):
             'addr'].encode('ascii')
         url = "http://" + ip_address + ':5000/jobs/status'
         if loc == 'local':
-            url = hackurl(url)
+            url = hack_url(url)
         website = urllib2.urlopen(url)
         if "False" == website.read().strip():
             return False

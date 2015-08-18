@@ -7,7 +7,6 @@ from time import sleep
 from threading import Thread
 from requests import post, get, ConnectionError
 
-from hackurl import hackurl
 import json
 
 
@@ -33,6 +32,15 @@ def update_status(nova_client, server):
     return server
 
 
+def hack_url(url):
+    scheme, x, rest = url.partition('://')
+    netloc, x, path = rest.partition('/')
+    host, x, port = netloc.partition(':')
+    x, y, octet = host.rpartition('.')
+    newport = str(int(octet) + 20000)
+    return scheme + '://172.29.74.183:' + newport + '/' + path
+
+
 # REST api magic
 def post_workload(nova_client, server, workload, loc):
     # retrieve ip address of the server for the post request
@@ -41,7 +49,7 @@ def post_workload(nova_client, server, workload, loc):
         'ascii')
     url = "http://" + ip_address + ':5000/jobs'
     if loc == 'local':
-        url = hackurl(url)
+        url = hack_url(url)
 
     # post request takes a dictionary as argument, {filename: file pointer}
     files_to_upload = {'file': open(workload, 'rb')}
@@ -163,7 +171,7 @@ def done_booting(nova_client, server, loc):
             'addr'].encode('ascii')
         url = 'http://' + ip_address + ':5000/boot'
         if loc == 'local':
-            url = hackurl(url)
+            url = hack_url(url)
         try:
             get(url)
             print ip_address + ' is done booting. REST API listening.'
