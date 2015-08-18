@@ -1,14 +1,13 @@
 from scheduling import *
 from clients import *
 from init import *
-from upload import *
 from move import *
 
 # The default state is to run only in the local cloud, using the remote on an
 # as-needed basis
 local_only = True
 
-local_credentials = load_credentials('local.json')
+local_credentials = load_credentials('config/local.json')
 local_keystone = create_keystone_client(local_credentials)
 local_glance = create_glance_client(local_keystone)
 local_swift = create_swift_client(local_credentials)
@@ -41,7 +40,7 @@ if not local_only:
     # Given a deadline, workload, and a collection of data, determine
     # which cloud to outsource to
 
-    remote_credentials = load_credentials('remote.json')
+    remote_credentials = load_credentials('config/remote.json')
     remote_keystone = create_keystone_client(remote_credentials)
     remote_glance = create_glance_client(remote_keystone)
     remote_nova = create_nova_client(remote_credentials)

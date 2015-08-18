@@ -69,7 +69,7 @@ def grab_thread():
     global grabQ, convertQ
 
     print 'GRAB THREAD: Loading credentials'
-    credentials = json.load(open('local.json'))
+    credentials = json.load(open('config/local.json'))
 
     print 'GRAB THREAD: Spawning swift client'
     sw_client = create_swift_client(credentials)
@@ -103,7 +103,7 @@ def place_thread():
     global placeQ, num_processed, num_total
 
     print 'PLACE THREAD: Loading credentials'
-    credentials = json.load(open('local.json'))
+    credentials = json.load(open('config/local.json'))
 
     print 'PLACE THREAD: Spawning swift client'
     sw_client = create_swift_client(credentials)
@@ -128,7 +128,7 @@ def fill_grabQ(swift_urls):
     num_total = grabQ.qsize()
 
 
-def read_config(config_file='transcode.json'):
+def read_config(config_file='config/transcode.json'):
     with open(config_file) as json_config:
         return json.load(json_config)
 
