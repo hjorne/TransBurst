@@ -7,7 +7,6 @@ import time
 import json
 import csv
 import os
-
 from ingest import read_index
 
 
@@ -197,6 +196,12 @@ def generate_vec(filename, transcode_config):
 
 
 def prettify_time(num_seconds):
+    """ Based off a number of seconds passed to the function, this will round
+    it off to the nearest 10 seconds, and return it in a nicer format using
+    both minutes and seconds.
+
+    ex. prettify_time(192) == 3 minutes 10 seconds
+    """
     time_est = int(ceil(num_seconds/10.)) * 10
     return time.strftime('%-M minutes %-S seconds', time.gmtime(time_est))
 
@@ -228,5 +233,5 @@ if __name__ == '__main__':
 
     raw_data = parse_data(training_data)
     scaled_data, scaler = scale_data(raw_data)
-    final_data = split_data(scaled_data, 1/30.)
+    final_data = split_data(scaled_data, 2/3.)
     predictor = train_predictor(final_data)
