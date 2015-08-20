@@ -34,14 +34,14 @@ def partition(remaining, swift, container_name='videos', file_list=None):
             file_list = [token[0] for token in container_data]
         except IndexError:
             print "IndexError: Container empty"
-
     
     # where we store the partitioned list of videos.
-    # Internal lists seperate what is possible to transcode in time on one VM
+    # Internal lists separate what is possible to transcode in time on one VM
     partitioned_video_list = []
 
-    # given a time-until-completetion by joe's look up table, we keep decrementing "time_until_deadline" by 
-    # these times until it reaches zero, then, create a new list (representing a new vm), and repeat. 
+    # given a time-until-completion by joe's look up table, we keep
+    # decrementing "time_until_deadline" by these times until it reaches
+    # zero, then, create a new list (representing a new vm), and repeat.
     tmp_t_u_d = remaining
     print "Time Remaining:", predictor.prettify_time(remaining)
     single_vm_capacity = []

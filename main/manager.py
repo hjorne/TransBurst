@@ -59,7 +59,8 @@ def post_workload(nova_client, server, workload, loc):
 
 
 # search for a flavor that has exactly 4GB of RAM and 2 VCPUS
-# if such a flavor is not found, begin a recursive search for the closest matching flavor
+# if such a flavor is not found, begin a recursive search for the closest
+# matching flavor
 def find_flavor(nova_client, RAM=4096, vCPUS=2):
     # upper bound of recursive search
     if RAM > 262144 or vCPUS > 64:
@@ -72,19 +73,18 @@ def find_flavor(nova_client, RAM=4096, vCPUS=2):
                 print "Flavor found!  Specs: RAM=%d vCPUS=%d" % (RAM, vCPUS)
                 return flavor.id.encode("ascii")
 
-    # if not found, look for something bigger in RAM or vCPUS
-    return find_flavor(nova_client, RAM * 2, vCPUS) or find_flavor(nova_client,
-                                                                   RAM,
-                                                                   vCPUS * 2)
+    # If not found, look for something bigger in RAM or vCPUS
+    return (find_flavor(nova_client, RAM * 2, vCPUS) or
+            find_flavor(nova_client, RAM, vCPUS * 2))
 
 
-def spawn_thread(nova_client, ImageID, loc, schedule, flavor, num, server_list):
+def spawn_thread(nova_client, image_id, loc, schedule, flavor, num,
+                 server_list):
     # print "Spawning transburst server with flavor id", flavor, "..."
     try:
         # and put that vm's workload in that file.
-        server = activate_image(nova_client, ImageID, "Transburst Server Group",
+        server = activate_image(nova_client, image_id, "Transburst Server Group",
                                 flavor)
-
 
         # keep checking to make sure the server has been booted.
         # if an error state is reached, fall back.
