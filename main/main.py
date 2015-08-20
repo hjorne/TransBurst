@@ -1,3 +1,8 @@
+""" This is main.py, the file that is actually run and orchestrates
+the process, typically after ingest.py is run. Certain parts are not
+commented, as the print statements generally sufficiently explain what is
+going on.
+"""
 from scheduling import *
 from clients import *
 from manager import *
@@ -7,12 +12,15 @@ from move import *
 # as-needed basis
 local_only = True
 
+# Creates all needed Python OpenStack clients required to run the program for
+# the local cloud only
 local_credentials = load_credentials('config/local.json')
 local_keystone = create_keystone_client(local_credentials)
 local_glance = create_glance_client(local_keystone)
 local_swift = create_swift_client(local_credentials)
 local_nova = create_nova_client(local_credentials)
 
+# Deadline is stored in the local_credentials
 deadline = local_credentials['DEADLINE']
 
 # Determine what can be done in the allotted time
@@ -40,6 +48,8 @@ if not local_only:
     # Given a deadline, workload, and a collection of data, determine
     # which cloud to outsource to
 
+    # Creates all needed Python OpenStack clients required to run the program
+    # for the remote cloud
     remote_credentials = load_credentials('config/remote.json')
     remote_keystone = create_keystone_client(remote_credentials)
     remote_glance = create_glance_client(remote_keystone)
@@ -47,7 +57,6 @@ if not local_only:
     remote_swift = create_swift_client(remote_credentials)
 
     print 'Moving data to remote cloud...'
-    # Using that cloud's api, move the video files to that cloud
 
     # Find remote schedule
     remote_list = [video for sub_list in remote_workload for video in
