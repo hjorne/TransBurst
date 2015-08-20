@@ -1,4 +1,5 @@
-""" This file is automatically run on each of the worker nodes when the image
+""" COPYRIGHT Cisco Systems, Inc. 2015
+This file is automatically run on each of the worker nodes when the image
 boots up, contains all functions for transcoding, and contains the REST API.
 There are 3 main threads in this program, the grab thread, the convert
 thread, and the place thread.
@@ -21,13 +22,12 @@ Read those in lieu of comments.
 """
 from threading import Thread
 from Queue import Queue
-import datetime
 import tarfile
-import time
 import os
 from flask import *
 from converter import ffmpeg
 from clients import create_swift_client
+
 
 # Global variables required for the REST API
 app = Flask(__name__)

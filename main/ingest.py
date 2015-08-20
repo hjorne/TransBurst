@@ -1,4 +1,5 @@
-""" This file will ingest all .mp4 and .mkv files in a given directory when
+""" COPYRIGHT Cisco Systems, Inc. 2015
+This file will ingest all .mp4 and .mkv files in a given directory when
 run, although it can also be imported into other files and run from there.
 The default directory is the directory ingest.py is run from, but this can be
 changed using a command line argument: './ingest.py ingest/directory/path'.

@@ -1,4 +1,5 @@
-""" This module as all functions associated with learning and prediction of
+""" COPYRIGHT Cisco Systems, Inc. 2015
+This module as all functions associated with learning and prediction of
 transcode times. The data for the training of the predictor and scaler
 objects is found in misc/conversions.csv. The predictor and scaler modules
 may be retrained with different data stored in the same format as
@@ -19,7 +20,6 @@ import time
 import json
 import csv
 import os
-
 from ingest import read_index
 
 
@@ -240,5 +240,7 @@ if __name__ == '__main__':
 
     raw_data = parse_data(training_data)
     scaled_data, scaler = scale_data(raw_data)
-    final_data = split_data(scaled_data, 1/30.)
+    final_data = split_data(scaled_data, 2/3.)
     predictor = train_predictor(final_data)
+    print ('Predictor mean absolute percent error: %s' +
+           str(test_predictor(final_data)) + '%')

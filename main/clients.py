@@ -1,4 +1,5 @@
-""" A collection of function that spawn Python OpenStack clients """
+""" COPYRIGHT Cisco Systems, Inc. 2015
+A collection of function that spawn Python OpenStack clients """
 import keystoneclient.v2_0.client as keystone_client
 from keystoneclient import session
 from keystoneclient.auth.identity import v2

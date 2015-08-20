@@ -1,4 +1,5 @@
-""" The manager.py file contains functions to automate uploading, starting,
+""" COPYRIGHT Cisco Systems, Inc. 2015
+The manager.py file contains functions to automate uploading, starting,
 creating, and otherwise managing worker nodes.
 """
 from novaclient import exceptions

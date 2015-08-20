@@ -1,4 +1,6 @@
-""" Small collection of functions about moving data to and from swift """
+""" COPYRIGHT Cisco Systems, Inc. 2015
+Small collection of functions about moving data to and from swift
+"""
 from threading import Thread
 
 

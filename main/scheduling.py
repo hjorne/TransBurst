@@ -1,4 +1,5 @@
-""" Set of functions dealing with the scheduling and workload distribution
+""" COPYRIGHT Cisco Systems, Inc. 2015
+Set of functions dealing with the scheduling and workload distribution
 among the worker nodes
 """
 import time

@@ -1,4 +1,5 @@
-""" This is main.py, the file that is actually run and orchestrates
+""" COPYRIGHT Cisco Systems, Inc. 2015
+This is main.py, the file that is actually run and orchestrates
 the process, typically after ingest.py is run. Certain parts are not
 commented, as the print statements generally sufficiently explain what is
 going on.
