@@ -31,6 +31,9 @@ If you are planning to use the default worker image with this project, as
 well as the default machine learning predictor modules found in
 main/predictor and main/scaler, then using it is simple.
 
+The configuration of this project is stored in 3 configuration .json files,
+found in main/config.
+
 First, you run ingest.py on a directory with whatever videos you want
 transcode:
 `./ingest.py relative/path/to/directory`
