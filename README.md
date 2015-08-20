@@ -32,10 +32,13 @@ well as the default machine learning predictor modules found in
 main/predictor and main/scaler, then using it is simple.
 
 The configuration of this project is stored in 3 configuration .json files,
-found in main/config.
+found in main/config. local.json stores the credentials for the local cloud
+that you own, remote.json stores the credentials for the remote cloud (such
+as Cisco Cloud Solutions), and transcode.json stores information on how you
+want the files transcoded (which is used by the worker image in worker.py).
 
-First, you run ingest.py on a directory with whatever videos you want
-transcode:
+Once you have your setup properly configured, you run ingest.py on a
+directory with whatever videos you want transcode:
 `./ingest.py relative/path/to/directory`
 
 While this is running, it will print out a variety of statements elaborating
@@ -46,6 +49,7 @@ on what the ingest is currently working on. Once the ingest is completed, you
  `main.py` is run, simply look at the terminal in order to see what the
  program is doing.
 
+**NOTE: This program currently only works with OpenStack compatible clouds!**
 
 # Transcode Time Prediction
 Accurate transcode time prediction is essential to the well-functioning of
