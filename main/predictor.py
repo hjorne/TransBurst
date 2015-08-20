@@ -1,3 +1,15 @@
+""" This module as all functions associated with learning and prediction of
+transcode times. The data for the training of the predictor and scaler
+objects is found in misc/conversions.csv. The predictor and scaler modules
+may be retrained with different data stored in the same format as
+conversions.csv. The format is as follows:
+
+Input Container Format, Video Duration, Input FPS,
+Input Video Codec, Input Resolution, Input Audio Codec,
+Input # i-frames, Input # b-frames, Input # p-frames,
+Output Container Format, Output FPS, Output Video Codec,
+Output Resolution, Output Audio Codec, Transcode Time
+"""
 from sklearn.externals import joblib
 from sklearn import preprocessing
 from sklearn import grid_search
@@ -7,6 +19,7 @@ import time
 import json
 import csv
 import os
+
 from ingest import read_index
 
 
@@ -196,12 +209,6 @@ def generate_vec(filename, transcode_config):
 
 
 def prettify_time(num_seconds):
-    """ Based off a number of seconds passed to the function, this will round
-    it off to the nearest 10 seconds, and return it in a nicer format using
-    both minutes and seconds.
-
-    ex. prettify_time(192) == 3 minutes 10 seconds
-    """
     time_est = int(ceil(num_seconds/10.)) * 10
     return time.strftime('%-M minutes %-S seconds', time.gmtime(time_est))
 
@@ -229,9 +236,9 @@ def predict(filename, predictor=None, scaler=None, config=None):
 # Running this file will train a predictor based off the training data found in
 # the specified csv file
 if __name__ == '__main__':
-    training_data = 'conversions_total.csv'
+    training_data = 'conversions.csv'
 
     raw_data = parse_data(training_data)
     scaled_data, scaler = scale_data(raw_data)
-    final_data = split_data(scaled_data, 2/3.)
+    final_data = split_data(scaled_data, 1/30.)
     predictor = train_predictor(final_data)
