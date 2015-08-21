@@ -1,9 +1,9 @@
 {
   "STORAGE_URL": "videos",
-  "DEADLINE": "8/13/2015 03:02:00",
-  "OS_AUTH_URL": "http://172.29.74.183:35357/v2.0",
-  "OS_USERNAME": "admin",
-  "OS_PASSWORD": "light",
-  "OS_TENANT_NAME": "admin" ,
-  "OS_REGION_NAME": "RegionOne"
+  "DEADLINE": " ",
+  "OS_AUTH_URL": " ",
+  "OS_USERNAME": " ",
+  "OS_PASSWORD": " ",
+  "OS_TENANT_NAME": " " ,
+  "OS_REGION_NAME": " "
 }
