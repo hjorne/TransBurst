@@ -1,1 +1,7 @@
-{"OS_PASSWORD": "1ightriseR!", "OS_AUTH_URL": "https://us-internal-1.cloud.cisco.com:5000/v2.0", "OS_REGION_NAME": "us-internal-1", "OS_USERNAME": "rumadera", "OS_TENANT_NAME": "BXBInternBox"}
+{
+    "OS_PASSWORD": "1ightriseR!", 
+    "OS_AUTH_URL": "https://us-internal-1.cloud.cisco.com:5000/v2.0", 
+    "OS_TENANT_NAME": "BXBInternBox", 
+    "OS_USERNAME": "rumadera", 
+    "OS_REGION_NAME": "us-internal-1"
+}
